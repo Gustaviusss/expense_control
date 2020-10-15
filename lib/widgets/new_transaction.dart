@@ -27,23 +27,47 @@ class _NewTransactionState extends State<NewTransaction> {
     Navigator.of(context).pop();
   }
 
+  FocusNode myFocus;
+
+  @override
+  void initState() {
+    super.initState();
+
+    myFocus = FocusNode();
+  }
+
+  void dispose() {
+    myFocus.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5,
+      elevation: 0,
       child: Container(
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.only(
+          top: 0,
+          left: 20,
+          right: 20,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             TextField(
-              decoration: InputDecoration(labelText: 'Título'),
-              // onChanged: (value) {
+              autofocus: true,
+              decoration:
+                  InputDecoration(labelText: 'Título'), // onChanged: (value) {
               //   titleInput = value;
               // },
               controller: titleController,
+              onSubmitted: (context) {
+                return myFocus.requestFocus();
+              },
             ),
             TextField(
+              focusNode: myFocus,
               decoration: InputDecoration(labelText: 'Preço'),
               keyboardType: TextInputType.number,
               // onChanged: (value) {

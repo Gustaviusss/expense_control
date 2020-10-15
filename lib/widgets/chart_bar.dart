@@ -9,8 +9,9 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var hoje = new DateTime.now();
     return Column(children: <Widget>[
-      Text('\$${spendingAmount.toStringAsFixed(0)}'),
+      FittedBox(child: Text('\$${spendingAmount.toStringAsFixed(0)}')),
       SizedBox(
         height: 4,
       ),
@@ -26,7 +27,9 @@ class ChartBar extends StatelessWidget {
           FractionallySizedBox(
             heightFactor: spendingPercent,
             child: Container(
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(20)),
             ),
           )
         ]),
@@ -34,7 +37,9 @@ class ChartBar extends StatelessWidget {
       SizedBox(
         height: 4,
       ),
-      Text(label)
+      Text(label,
+          style:
+              TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Quicksand'))
     ]);
   }
 }

@@ -34,26 +34,32 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      margin: EdgeInsets.all(20),
-      child: Container(
-        padding: EdgeInsets.all(4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: groupedTransactionValues.map((data) {
-            return Flexible(
-              fit: FlexFit.tight,
-              child: ChartBar(
-                  data['day'],
-                  data['amount'],
-                  maxSpending == 0.0
-                      ? 0.0
-                      : (data['amount'] as double) / maxSpending),
-            );
-          }).toList(),
+    return Column(children: <Widget>[
+      Card(
+        elevation: 6,
+        margin: EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
+        child: Container(
+          padding: EdgeInsets.all(4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: groupedTransactionValues.map((data) {
+              return Flexible(
+                fit: FlexFit.tight,
+                child: ChartBar(
+                    data['day'],
+                    data['amount'],
+                    maxSpending == 0.0
+                        ? 0.0
+                        : (data['amount'] as double) / maxSpending),
+              );
+            }).toList(),
+          ),
         ),
       ),
-    );
+      Text(
+        'Gastos da Semana: \$${maxSpending.toStringAsFixed(2)}',
+        style: Theme.of(context).textTheme.title,
+      ),
+    ]);
   }
 }

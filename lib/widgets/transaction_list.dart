@@ -5,18 +5,17 @@ import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transaction;
+  final Function deleteTx;
 
-  TransactionList(this.transaction);
+  TransactionList(this.transaction, this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 300,
+        height: 450,
         child: transaction.isEmpty
             ? Column(
                 children: <Widget>[
-                  Text('Sem Gastos por enquanto',
-                      style: Theme.of(context).textTheme.title),
                   SizedBox(height: 20),
                   Container(
                       height: 200,
@@ -27,9 +26,9 @@ class TransactionList extends StatelessWidget {
             : ListView.builder(
                 itemBuilder: (ctx, index) {
                   return Card(
-                    elevation: 6,
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                    child: ListTile(
+                      elevation: 6,
+                      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                      child: ListTile(
                         leading: CircleAvatar(
                           radius: 30,
                           child: Padding(
@@ -45,8 +44,13 @@ class TransactionList extends StatelessWidget {
                           style: Theme.of(context).textTheme.title,
                         ),
                         subtitle: Text(DateFormat('dd/MM')
-                            .format(transaction[index].date))),
-                  );
+                            .format(transaction[index].date)),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          color: Theme.of(context).errorColor,
+                          onPressed: () => deleteTx(transaction[index].id),
+                        ),
+                      ));
                 },
                 itemCount: transaction.length,
               ));

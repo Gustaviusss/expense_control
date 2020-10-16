@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
@@ -11,20 +12,36 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _selectedDate;
 
-  final amountController = TextEditingController();
+  void _submitData() {
+    final enteredTitle = _titleController.text;
+    final enteredAmount = double.parse(_amountController.text);
 
-  void submitData() {
-    final enteredTitle = titleController.text;
-    final enteredAmount = double.parse(amountController.text);
-
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || _selectedDate == null) {
       return;
     }
-    widget.addTx(titleController.text, double.parse(amountController.text));
+    widget.addTx(enteredTitle, enteredAmount, _selectedDate);
 
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2020),
+            lastDate: DateTime.now())
+        .then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        return _selectedDate = pickedDate;
+      });
+    });
   }
 
   FocusNode myFocus;
@@ -61,7 +78,7 @@ class _NewTransactionState extends State<NewTransaction> {
                   InputDecoration(labelText: 'Título'), // onChanged: (value) {
               //   titleInput = value;
               // },
-              controller: titleController,
+              controller: _titleController,
               onSubmitted: (context) {
                 return myFocus.requestFocus();
               },
@@ -73,14 +90,38 @@ class _NewTransactionState extends State<NewTransaction> {
               // onChanged: (value) {
               //   amountInput = value;
               // },
-              onSubmitted: (_) => submitData(),
-              controller: amountController,
+              onSubmitted: (_) => _submitData(),
+              controller: _amountController,
             ),
-            FlatButton(
-              onPressed: submitData,
+            Container(
+              height: 70,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(_selectedDate == null
+                        ? 'Data'
+                        : 'Data: ${DateFormat("dd/MM").format(_selectedDate)}'),
+                  ),
+                  FlatButton(
+                    child: Text(
+                      _selectedDate == null ? 'Escolher Data' : 'Mudar Data',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                    onPressed: _presentDatePicker,
+                  )
+                ],
+              ),
+            ),
+            RaisedButton(
+              onPressed: _submitData,
+              color: Theme.of(context).primaryColor,
               child: Text(
                 'Salvar',
-                style: TextStyle(color: Colors.purple, fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             )
           ],

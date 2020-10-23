@@ -39,7 +39,8 @@ class _NewTransactionState extends State<NewTransaction> {
         return;
       }
       setState(() {
-        return _selectedDate = pickedDate;
+        _selectedDate = pickedDate;
+        _submitData();
       });
     });
   }
@@ -61,70 +62,74 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      child: Container(
-        margin: EdgeInsets.only(
-          top: 0,
-          left: 20,
-          right: 20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              autofocus: true,
-              decoration:
-                  InputDecoration(labelText: 'Título'), // onChanged: (value) {
-              //   titleInput = value;
-              // },
-              controller: _titleController,
-              onSubmitted: (context) {
-                return myFocus.requestFocus();
-              },
-            ),
-            TextField(
-              focusNode: myFocus,
-              decoration: InputDecoration(labelText: 'Preço'),
-              keyboardType: TextInputType.number,
-              // onChanged: (value) {
-              //   amountInput = value;
-              // },
-              onSubmitted: (_) => _submitData(),
-              controller: _amountController,
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(_selectedDate == null
-                        ? 'Data'
-                        : 'Data: ${DateFormat("dd/MM").format(_selectedDate)}'),
-                  ),
-                  FlatButton(
-                    child: Text(
-                      _selectedDate == null ? 'Escolher Data' : 'Mudar Data',
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+              top: 10,
+              left: 10,
+              right: 10,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                autofocus: true,
+                decoration: InputDecoration(
+                    labelText: 'Título'), // onChanged: (value) {
+                //   titleInput = value;
+                // },
+                controller: _titleController,
+                onSubmitted: (context) {
+                  return myFocus.requestFocus();
+                },
+              ),
+              TextField(
+                focusNode: myFocus,
+                decoration: InputDecoration(labelText: 'Preço'),
+                keyboardType: TextInputType.number,
+                // onChanged: (value) {
+                //   amountInput = value;
+                // },
+                onSubmitted: (context) {
+                  return myFocus.requestFocus();
+                },
+                controller: _amountController,
+              ),
+              Container(
+                height: 70,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(_selectedDate == null
+                          ? 'Data'
+                          : 'Data: ${DateFormat("dd/MM").format(_selectedDate)}'),
                     ),
-                    onPressed: _presentDatePicker,
-                  )
-                ],
+                    FlatButton(
+                      child: Text(
+                        _selectedDate == null ? 'Escolher Data' : 'Mudar Data',
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                      onPressed: _presentDatePicker,
+                    )
+                  ],
+                ),
               ),
-            ),
-            RaisedButton(
-              onPressed: _submitData,
-              color: Theme.of(context).primaryColor,
-              child: Text(
-                'Salvar',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            )
-          ],
+              RaisedButton(
+                onPressed: _submitData,
+                color: Theme.of(context).primaryColor,
+                child: Text(
+                  'Salvar',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -39,7 +39,7 @@ class Chart extends StatelessWidget {
         // children: <Widget>[
         Card(
       elevation: 6,
-      margin: EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
+      margin: EdgeInsets.only(top: 20, right: 10, left: 10, bottom: 10),
       child: Container(
         padding: EdgeInsets.all(4),
         child: Row(

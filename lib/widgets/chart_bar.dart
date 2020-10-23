@@ -43,7 +43,7 @@ class ChartBar extends StatelessWidget {
           child: FittedBox(
             child: Text(label,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, fontFamily: 'Quicksand')),
+                    fontWeight: FontWeight.w500, fontFamily: 'Quicksand')),
           ),
         )
       ]);

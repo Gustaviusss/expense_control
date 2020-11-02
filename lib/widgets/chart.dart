@@ -34,8 +34,7 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-        //Column(
+    return //Column(
         // children: <Widget>[
         Card(
       elevation: 6,
@@ -58,12 +57,11 @@ class Chart extends StatelessWidget {
         ),
       ),
     );
-//        SizedBox(height: 4),
-//         Text(
-//           'Gastos da Semana: \$${maxSpending.toStringAsFixed(2)}',
-//           style: Theme.of(context).textTheme.title,
-//         ),
-//  //     ],
-//    );
+    // Text(
+    //   'Gastos da Semana: \$${maxSpending.toStringAsFixed(2)}',
+    //   style: Theme.of(context).textTheme.title,
+    // ),
+    // ],
+    // );
   }
 }

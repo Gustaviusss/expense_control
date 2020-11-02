@@ -93,12 +93,8 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
-
-    final PreferredSizeWidget appBar = Platform.isIOS
+  Widget _buildAppbar() {
+    return Platform.isIOS
         ? CupertinoNavigationBar(
             middle: Text('Gastos Pessoais'),
             trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -115,54 +111,39 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () => _startAddNewTransaction(context))
             ],
           );
-    final txListWidget = Container(
-        height: (mediaQuery.size.height -
-                appBar.preferredSize.height -
-                mediaQuery.padding.top) *
-            0.75,
-        child: TransactionList(_userTransaction, _deleteTransaction));
-    final bodyContent = SafeArea(
-        child: SingleChildScrollView(
-      child: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          if (isLandscape)
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              Text(
-                'Mostrar Card',
-                style: Theme.of(context).textTheme.title,
-              ),
-              Switch(
-                value: widget._showChart,
-                onChanged: (value) {
-                  setState(() {
-                    widget._showChart = value;
-                  });
-                },
-              ),
-            ]),
-          if (!isLandscape)
-            Container(
-                height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.3,
-                child: Chart(_recentTransactions)),
-          if (!isLandscape) txListWidget,
-          if (isLandscape)
-            widget._showChart == true
-                ? Container(
-                    height: (mediaQuery.size.height -
-                            appBar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        0.7,
-                    child: Chart(_recentTransactions))
-                : txListWidget
-        ],
-      ),
-    ));
+  }
 
+  Widget _buildLandscape() {
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      Text(
+        'Mostrar Card',
+        style: Theme.of(context).textTheme.title,
+      ),
+      Switch(
+        value: widget._showChart,
+        onChanged: (value) {
+          setState(() {
+            widget._showChart = value;
+          });
+        },
+      ),
+    ]);
+  }
+
+  List<Widget> _buildPortrait(
+      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+    return [
+      Container(
+          height: (mediaQuery.size.height -
+                  appBar.preferredSize.height -
+                  mediaQuery.padding.top) *
+              0.3,
+          child: Chart(_recentTransactions)),
+      txListWidget
+    ];
+  }
+
+  Widget _buildScaffold(Widget bodyContent, Widget appBar) {
     return Platform.isIOS
         ? CupertinoPageScaffold(
             child: bodyContent,
@@ -180,5 +161,42 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => _startAddNewTransaction(context),
                   ),
           );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+
+    final PreferredSizeWidget appBar = _buildAppbar();
+
+    final txListWidget = Container(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.75,
+        child: TransactionList(_userTransaction, _deleteTransaction));
+    final bodyContent = SafeArea(
+        child: SingleChildScrollView(
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          if (isLandscape) _buildLandscape(),
+          if (!isLandscape) ..._buildPortrait(mediaQuery, appBar, txListWidget),
+          if (isLandscape)
+            widget._showChart == true
+                ? Container(
+                    height: (mediaQuery.size.height -
+                            appBar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.7,
+                    child: Chart(_recentTransactions))
+                : txListWidget
+        ],
+      ),
+    ));
+
+    return _buildScaffold(bodyContent, appBar);
   }
 }
